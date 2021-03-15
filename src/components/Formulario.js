@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react';
+import uuid from 'uuid/dist/v4';
 
 const Formulario = () => {
 
@@ -10,6 +11,8 @@ const Formulario = () => {
         hora: '',
         sintomas: ''
     }); 
+
+    const [error, actualizarError] = useState(false);
 
     //Funcion que se ejecuta cada que el usuario escribe en un input
     const actualizarState = evento => {  //En evento se guardan los cambios del state
@@ -28,8 +31,18 @@ const Formulario = () => {
         evento.preventDefault(); //Cancela la opcion por default que es enviar el formulario
 
         //Validar
+        if (mascota.trim() === '' || propietario.trim() === '' || fecha.trim() === '' || hora.trim() === '' || sintomas.trim() === '') {
+            //Trim Quita espacios en blanco
+            actualizarError(true); 
+            return; //Es importante el return para que no siga el flujo de ejecucion de la funcion.
+        }
+
+        //Eliminar mensaje de error
+        actualizarError(false);
 
         //Asignar un id
+        cita.id = uuid();
+        console.log(cita);
 
         //Crear la cita
 
@@ -39,7 +52,7 @@ const Formulario = () => {
     return ( 
         <Fragment>
             <h2>Crear Cita</h2>
-
+            { error ? <p className="alerta-error">Todos los campos son obligatorios</p> : null}
             <form
                 onSubmit={submitCita}
             >
